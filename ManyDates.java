@@ -20,7 +20,7 @@ class ManyDates {
   /** Goes through a column and returns if all the column is
   *** a valid days column. O(n) time complexity.
   */
-  private boolean validDays(List<Integer> col) {
+  private static boolean validDays(List<Integer> col) {
     for (int i = 0; i < col.size(); i++) {
       if (col.get(i) > 31) {
         return false;
@@ -66,7 +66,6 @@ class ManyDates {
     ArrayList<Integer> col2 = new ArrayList<Integer>();
     ArrayList<Integer> col3 = new ArrayList<Integer>();
 
-
     /** Splits each line of input by the / separator
     *** Adds each number to an array by positions
     *** - all days are in the same ArrayList
@@ -109,6 +108,51 @@ class ManyDates {
     System.out.println(possibleMonth2);
     System.out.println(possibleMonth3);
 
-    
+    // Assign the month column index to be the first possible valid month column
+    int dayColIndex = 3;
+    int monthColIndex = 3;
+    int yearColIndex = 3;
+    for (int i = 0; i < possibleMonthCols.length; i++) {
+      if (possibleMonthCols[i]) {
+        monthColIndex = i;
+        break;
+      }
+    }
+
+    // Assign the other 2 columns by checking if a column is valid for days.
+    if (monthColIndex > 2) {
+      System.out.println("No possible month format");
+    } else if (monthColIndex == 2) {
+      if (validDays(col2)) {
+        dayColIndex = 1;
+        yearColIndex = 0;
+      } else {
+        dayColIndex = 0;
+        yearColIndex = 1;
+      }
+    } else if (monthColIndex == 1) {
+      if (validDays(col3)) {
+        dayColIndex = 2;
+        yearColIndex = 0;
+      } else {
+        dayColIndex = 0;
+        yearColIndex = 2;
+      }
+    } else if (monthColIndex == 0) {
+      if (validDays(col3)) {
+        dayColIndex = 2;
+        yearColIndex = 1;
+      } else {
+        dayColIndex = 1;
+        yearColIndex = 2;
+      }
+    }
+
+    System.out.println("Day column index is " + Integer.toString(dayColIndex));
+    System.out.println("Month column index is " + Integer.toString(monthColIndex));
+    System.out.println("Year column index is " + Integer.toString(yearColIndex));
+
+
+
   }
 }
