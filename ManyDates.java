@@ -100,9 +100,11 @@ class ManyDates {
 
     ManyDates test = new ManyDates();
 
+    /**
     System.out.println("col1: " + col1.toString());
     System.out.println("col2: " + col2.toString());
     System.out.println("col3: " + col3.toString());
+    */
 
     boolean possibleMonth1 = test.validMonths(col1);
     boolean possibleMonth2 = test.validMonths(col2);
@@ -110,9 +112,11 @@ class ManyDates {
 
     boolean[] possibleMonthCols = {possibleMonth1, possibleMonth2, possibleMonth3};
 
+    /**
     System.out.println(possibleMonth1);
     System.out.println(possibleMonth2);
     System.out.println(possibleMonth3);
+    */
 
     // Assign the month column index to be the first possible valid month column
     int dayColIndex = 3;
@@ -173,13 +177,15 @@ class ManyDates {
       }
     }
 
+    /**
     System.out.println("Day column index is " + Integer.toString(dayColIndex));
     System.out.println("Month column index is " + Integer.toString(monthColIndex));
     System.out.println("Year column index is " + Integer.toString(yearColIndex));
 
-    System.out.println(Arrays.toString(days));
-    System.out.println(Arrays.toString(months));
-    System.out.println(Arrays.toString(years));
+    System.out.println("Days " + Arrays.toString(days));
+    System.out.println("Months " + Arrays.toString(months));
+    System.out.println("Years " + Arrays.toString(years));
+    */
 
     int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
@@ -196,7 +202,7 @@ class ManyDates {
       // FILL IN OTHER LEAP YEAR CONDITIONS
       if (years[i] % 4 == 0) {
         daysInEachMonth[1] = 29;
-        System.out.println("Leap year " + Integer.toString(years[i]));
+        // System.out.println("Leap year " + Integer.toString(years[i]));
       } else if (daysInEachMonth[1] == 29){
         daysInEachMonth[1] = 28;
       }
@@ -261,12 +267,14 @@ class ManyDates {
 
     }
 
-    // FORMAT DAYS HERE -> 05 instead of 5
-
-    System.out.println(Arrays.toString(monthStrings));
-
+    String dayString;
     for (int i = 0; i < col1.size(); i++) {
-      System.out.println(Integer.toString(days[i]) + " " + monthStrings[i] + " " + Integer.toString(years[i]));
+      if (days[i] < 10) {
+        dayString = "0" + Integer.toString(days[i]);
+      } else {
+        dayString = Integer.toString(days[i]);
+      }
+      System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
     }
 
     final long end = System.nanoTime();
