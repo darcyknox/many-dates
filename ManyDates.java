@@ -4,9 +4,14 @@ import java.lang.String;
 
 class ManyDates {
 
+  private static boolean isValidDate = true;
+  private static String errorString = "";
+
   /** Goes through a column and returns if all the column is
   *** a valid months column. O(n) time complexity.
   */
+  // needs to return a score for how LIKELY it is that it's the months column
+  // maybe a percentage of valid months
   private boolean validMonths(List<Integer> col) {
     for (int i = 0; i < col.size(); i++) {
       if (col.get(i) > 12) {
@@ -66,6 +71,9 @@ class ManyDates {
     ArrayList<Integer> col2 = new ArrayList<Integer>();
     ArrayList<Integer> col3 = new ArrayList<Integer>();
 
+    String line = "";
+    String[] split;
+
     /** Splits each line of input by the / separator
     *** Adds each number to an array by positions
     *** - all days are in the same ArrayList
@@ -74,9 +82,9 @@ class ManyDates {
     */
     while (stdin.hasNextLine()) {
 
-      String line = stdin.nextLine();
+      line = stdin.nextLine();
 
-      String[] split = line.split("/");
+      split = line.split("/");
 
       n1 = Integer.parseInt(split[0]); // first number
       n2 = Integer.parseInt(split[1]); // second number
@@ -87,6 +95,8 @@ class ManyDates {
       col3.add(n3); // add the third number to the ArrayList of third numbers
 
     }
+
+    final long start = System.nanoTime();
 
     ManyDates test = new ManyDates();
 
@@ -118,8 +128,6 @@ class ManyDates {
     Integer[] days = new Integer[col1.size()];
     Integer[] months = new Integer[col1.size()];
     Integer[] years = new Integer[col1.size()];
-
-
 
     // Assign the other 2 columns by checking if a column is valid for days.
     if (monthColIndex > 2) {
@@ -173,9 +181,25 @@ class ManyDates {
     System.out.println(Arrays.toString(months));
     System.out.println(Arrays.toString(years));
 
+    int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    // array of string to store the input months as strings
     String[] monthStrings = new String[months.length];
 
+    // get the month string depending on the month number
+    // format the date if it is a 2 digit number
     for (int i = 0; i < months.length; i++) {
+
+      errorString = "";
+      isValidDate = true;
+
+      // FILL IN OTHER LEAP YEAR CONDITIONS
+      if (years[i] % 4 == 0) {
+        daysInEachMonth[1] = 29;
+        System.out.println("Leap year " + Integer.toString(years[i]));
+      } else if (daysInEachMonth[1] == 29){
+        daysInEachMonth[1] = 28;
+      }
 
       switch (months[i]){
         case 1:
@@ -219,13 +243,25 @@ class ManyDates {
           break;
       }
 
+      // checks whether the day is within the days in that particular month
+      if (days[i] > daysInEachMonth[months[i] - 1]) {
+        isValidDate = false; // DAY OUT OF RANGE FOR GIVEN MONTH
+      }
+
+      // adds 2000 to the year if between 0 and 49
+      // adds 1900 to the year if between 50 and 99
+      // invalid date if out of range
       if (years[i] >= 0 && years[i] < 50) {
         years[i] += 2000;
       } else if (years[i] >= 50 && years[i] < 100) {
         years[i] += 1900;
+      } else if ((years[i] >= 100 && years[i] < 1753) | years[i] > 3000) {
+        isValidDate = false; // YEAR OUT OF RANGE
       }
 
     }
+
+    // FORMAT DAYS HERE -> 05 instead of 5
 
     System.out.println(Arrays.toString(monthStrings));
 
@@ -233,5 +269,8 @@ class ManyDates {
       System.out.println(Integer.toString(days[i]) + " " + monthStrings[i] + " " + Integer.toString(years[i]));
     }
 
+    final long end = System.nanoTime();
+
+    System.out.println((end - start)/ Math.pow(10, 9));
   }
 }
