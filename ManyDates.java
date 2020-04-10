@@ -4,23 +4,10 @@ import java.lang.String;
 
 class ManyDates {
 
-  private static boolean isValidDate = true;
-  private static String errorString = "";
+  private static boolean isValidDate;
+  private static String errorString;
 
-  /** Goes through a column and returns if all the column is
-  *** a valid months column. O(n) time complexity.
-  */
-  // needs to return a score for how LIKELY it is that it's the months column
-  // maybe a percentage of valid months
-  private boolean validMonths(List<Integer> col) {
-    for (int i = 0; i < col.size(); i++) {
-      if (col.get(i) > 12) {
-        return false;
-      }
-    }
-    return true;
-  }
-
+  // returns the percentage of valid months in a column
   private static double monthScore(List<Integer> col) {
     double countValidMonths = 0;
     for (int i = 0; i < col.size(); i++) {
@@ -33,19 +20,7 @@ class ManyDates {
     return countValidMonths/col.size();
   }
 
-
-  /** Goes through a column and returns if all the column is
-  *** a valid days column. O(n) time complexity.
-  */
-  private static boolean validDays(List<Integer> col) {
-    for (int i = 0; i < col.size(); i++) {
-      if (col.get(i) > 31) {
-        return false;
-      }
-    }
-    return true;
-  }
-
+  // returns the percentage of valid days in a column
   private static double dayScore(List<Integer> col) {
     double countValidDays = 0;
     for (int i = 0; i < col.size(); i++) {
@@ -57,6 +32,7 @@ class ManyDates {
     System.out.println(countValidDays/col.size());
     return countValidDays/col.size();
   }
+
 
   public static void main(String[] args) {
 
@@ -114,9 +90,7 @@ class ManyDates {
     Integer[] years = new Integer[col1.size()];
 
     // Assign the other 2 columns by checking if a column is valid for days.
-    if (monthColIndex > 2) {
-      System.out.println("No possible month format");
-    } else if (monthColIndex == 2) {
+    if (monthColIndex == 2) {
       months = col3.toArray(months);
       if (dayScore(col2) > dayScore(col1)) {
         days = col2.toArray(days);
@@ -238,25 +212,6 @@ class ManyDates {
       }
 
     }
-
-
-
-    // OUTPUT
-
-    /**
-    for (int i = 0; i < col1.size(); i++) {
-      if (!isValidDate) {
-        System.out.println(Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
-      } else {
-        if (days[i] < 10) {
-          dayString = "0" + Integer.toString(days[i]);
-        } else {
-          dayString = Integer.toString(days[i]);
-        }
-        System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
-      }
-    }
-    */
 
     final long end = System.nanoTime();
 
