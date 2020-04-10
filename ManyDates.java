@@ -89,7 +89,8 @@ class ManyDates {
     Integer[] months = new Integer[col1.size()];
     Integer[] years = new Integer[col1.size()];
 
-    // Assign the other 2 columns by checking if a column is valid for days.
+    /** From knowing the likeliest month column, assign the days column to be
+      * the likeliest days column out of the two remaining */
     if (monthColIndex == 2) {
       months = col3.toArray(months);
       if (dayScore(col2) > dayScore(col1)) {
@@ -177,14 +178,14 @@ class ManyDates {
           monthStrings[i] = "Dec";
           break;
         default:
-          System.out.println("Month not in valid range from 1-12.");
+          errorString = " - INVALID: Month out of range."
           break;
       }
 
       // checks whether the day is within the days in that particular month
       if (days[i] > daysInEachMonth[months[i] - 1]) {
         isValidDate = false; // DAY OUT OF RANGE FOR GIVEN MONTH
-        errorString = " - INVALID: Day out of range for given month";
+        errorString = " - INVALID: Day out of range for given month.";
       }
 
       // adds 2000 to the year if between 0 and 49
@@ -196,7 +197,7 @@ class ManyDates {
         years[i] += 1900;
       } else if ((years[i] >= 100 && years[i] < 1753) | years[i] > 3000) {
         isValidDate = false; // YEAR OUT OF RANGE
-        errorString = " - INVALID: Year out of range";
+        errorString = " - INVALID: Year out of range.";
       }
 
       String dayString;
