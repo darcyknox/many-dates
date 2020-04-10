@@ -21,6 +21,18 @@ class ManyDates {
     return true;
   }
 
+  private static double monthScore(List<Integer> col) {
+    double countValidMonths = 0;
+    for (int i = 0; i < col.size(); i++) {
+      if (col.get(i) <= 12) {
+        countValidMonths++;
+      }
+    }
+    System.out.print("Score: ");
+    System.out.println(countValidMonths/col.size());
+    return countValidMonths/col.size();
+  }
+
 
   /** Goes through a column and returns if all the column is
   *** a valid days column. O(n) time complexity.
@@ -34,33 +46,17 @@ class ManyDates {
     return true;
   }
 
-
-  // by rows
-  private boolean[] findMonths(int[] row) {
-    boolean[] result = new boolean[3];
-    for (int i : row) {
-      if (i <= 12) {
-        result[i] = true;
-      } else {
-        result[i] = false;
+  private static double dayScore(List<Integer> col) {
+    double countValidDays = 0;
+    for (int i = 0; i < col.size(); i++) {
+      if (col.get(i) <= 31) {
+        countValidDays++;
       }
     }
-    return result;
+    System.out.print("Score: ");
+    System.out.println(countValidDays/col.size());
+    return countValidDays/col.size();
   }
-
-  // by rows
-  private boolean[] findDays(int[] row) {
-    boolean[] result = new boolean[3];
-    for (int i : row) {
-      if (i <= 31) {
-        result[i] = true;
-      } else {
-        result[i] = false;
-      }
-    }
-    return result;
-  }
-
 
   public static void main(String[] args) {
 
@@ -98,34 +94,18 @@ class ManyDates {
 
     final long start = System.nanoTime();
 
-    ManyDates test = new ManyDates();
+    double col1MonthScore = monthScore(col1);
+    double col2MonthScore = monthScore(col2);
+    double col3MonthScore = monthScore(col3);
 
-    /**
-    System.out.println("col1: " + col1.toString());
-    System.out.println("col2: " + col2.toString());
-    System.out.println("col3: " + col3.toString());
-    */
+    double[] monthScores = {col1MonthScore, col2MonthScore, col3MonthScore};
 
-    boolean possibleMonth1 = test.validMonths(col1);
-    boolean possibleMonth2 = test.validMonths(col2);
-    boolean possibleMonth3 = test.validMonths(col3);
-
-    boolean[] possibleMonthCols = {possibleMonth1, possibleMonth2, possibleMonth3};
-
-    /**
-    System.out.println(possibleMonth1);
-    System.out.println(possibleMonth2);
-    System.out.println(possibleMonth3);
-    */
-
-    // Assign the month column index to be the first possible valid month column
-    int dayColIndex = 3;
-    int monthColIndex = 3;
-    int yearColIndex = 3;
-    for (int i = 0; i < possibleMonthCols.length; i++) {
-      if (possibleMonthCols[i]) {
+    int monthColIndex = 0;
+    double maxScore = monthScores[monthColIndex];
+    for (int i = 1; i < 3; i++) {
+      if (monthScores[i] > maxScore) {
         monthColIndex = i;
-        break;
+        maxScore = monthScores[i];
       }
     }
 
@@ -138,62 +118,39 @@ class ManyDates {
       System.out.println("No possible month format");
     } else if (monthColIndex == 2) {
       months = col3.toArray(months);
-      if (validDays(col2)) {
-        dayColIndex = 1;
+      if (dayScore(col2) > dayScore(col1)) {
         days = col2.toArray(days);
-        yearColIndex = 0;
         years = col1.toArray(years);
       } else {
-        dayColIndex = 0;
         days = col1.toArray(days);
-        yearColIndex = 1;
         years = col2.toArray(years);
       }
     } else if (monthColIndex == 1) {
       months = col2.toArray(months);
-      if (validDays(col3)) {
-        dayColIndex = 2;
+      if (dayScore(col3) > dayScore(col1)) {
         days = col3.toArray(days);
-        yearColIndex = 0;
         years = col1.toArray(years);
       } else {
-        dayColIndex = 0;
         days = col1.toArray(days);
-        yearColIndex = 2;
         years = col3.toArray(years);
       }
     } else if (monthColIndex == 0) {
       months = col1.toArray(months);
-      if (validDays(col3)) {
-        dayColIndex = 2;
+      if (dayScore(col3) > dayScore(col2)) {
         days = col3.toArray(days);
-        yearColIndex = 1;
         years = col2.toArray(years);
       } else {
-        dayColIndex = 1;
         days = col2.toArray(days);
-        yearColIndex = 2;
         years = col3.toArray(years);
       }
     }
 
-    /**
-    System.out.println("Day column index is " + Integer.toString(dayColIndex));
-    System.out.println("Month column index is " + Integer.toString(monthColIndex));
-    System.out.println("Year column index is " + Integer.toString(yearColIndex));
-
-    System.out.println("Days " + Arrays.toString(days));
-    System.out.println("Months " + Arrays.toString(months));
-    System.out.println("Years " + Arrays.toString(years));
-    */
-
     int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-    // array of string to store the input months as strings
+    // array to store our number months converted to strings
     String[] monthStrings = new String[months.length];
 
-    // get the month string depending on the month number
-    // format the date if it is a 2 digit number
+    // Checks and Formatting
     for (int i = 0; i < months.length; i++) {
 
       errorString = "";
@@ -207,6 +164,7 @@ class ManyDates {
         daysInEachMonth[1] = 28;
       }
 
+      // converting month as number its 3 letter string
       switch (months[i]){
         case 1:
           monthStrings[i] = "Jan";
@@ -252,6 +210,7 @@ class ManyDates {
       // checks whether the day is within the days in that particular month
       if (days[i] > daysInEachMonth[months[i] - 1]) {
         isValidDate = false; // DAY OUT OF RANGE FOR GIVEN MONTH
+        errorString = " - INVALID: Day out of range for given month";
       }
 
       // adds 2000 to the year if between 0 and 49
@@ -263,19 +222,41 @@ class ManyDates {
         years[i] += 1900;
       } else if ((years[i] >= 100 && years[i] < 1753) | years[i] > 3000) {
         isValidDate = false; // YEAR OUT OF RANGE
+        errorString = " - INVALID: Year out of range";
       }
 
-    }
-
-    String dayString;
-    for (int i = 0; i < col1.size(); i++) {
-      if (days[i] < 10) {
-        dayString = "0" + Integer.toString(days[i]);
+      String dayString;
+      if (!isValidDate) {
+        System.out.println(Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
       } else {
-        dayString = Integer.toString(days[i]);
+        if (days[i] < 10) {
+          dayString = "0" + Integer.toString(days[i]);
+        } else {
+          dayString = Integer.toString(days[i]);
+        }
+        System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
       }
-      System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
+
     }
+
+
+
+    // OUTPUT
+
+    /**
+    for (int i = 0; i < col1.size(); i++) {
+      if (!isValidDate) {
+        System.out.println(Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
+      } else {
+        if (days[i] < 10) {
+          dayString = "0" + Integer.toString(days[i]);
+        } else {
+          dayString = Integer.toString(days[i]);
+        }
+        System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
+      }
+    }
+    */
 
     final long end = System.nanoTime();
 
