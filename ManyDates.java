@@ -58,6 +58,8 @@ class ManyDates {
 
       split = line.split("/");
 
+
+
       n1 = Integer.parseInt(split[0]); // first number
       n2 = Integer.parseInt(split[1]); // second number
       n3 = Integer.parseInt(split[2]); // third number
@@ -131,13 +133,43 @@ class ManyDates {
       errorString = "";
       isValidDate = true;
 
-      // Leap year condition
+      // Check if leap year. If not, make sure Feb days are 28
       if (years[i] % 4 == 0 && !(years[i] % 100 == 0 && years[i] % 400 != 0)) {
         daysInEachMonth[1] = 29;
-        // System.out.println("Leap year " + Integer.toString(years[i]));
       } else if (daysInEachMonth[1] == 29){
         daysInEachMonth[1] = 28;
       }
+
+    //  EXAMPLE
+
+    // if (mdy is predominant){
+    //   skip over dates that aren't mdy
+    // }
+
+
+    //  IMPLEMENTATION (would go something like this)
+
+    // For the given format of stdin, skip over dates that don't match this
+    /*
+    try {
+      if (monthColIndex == 0 && days[i] == col3[i]){ //i.e. if MYD
+        line day <= daysInEachMonth[line monthColIndex]; // if line is not MYD
+      } else if (monthColIndex == 0 && days[i] == col2[i]){ //i.e. if MDY
+        line day <= daysInEachMonth[line monthColIndex]
+      } else if (monthColIndex == 1 && days[i] == col3[i]){ //i.e. if YMD
+        line day <= daysInEachMonth[line monthColIndex]
+      } else if (monthColIndex == 1 && days[i] == col1[i]){ //i.e. if DMY
+        line day <= daysInEachMonth[line monthColIndex]
+      } else if (monthColIndex == 2 && days[i] == col2[i]){ //i.e. if YDM
+        line day <= daysInEachMonth[line monthColIndex]
+      } else if (monthColIndex == 2 && days[i] == col1[i]){ //i.e. if DYM
+        line day <= daysInEachMonth[line monthColIndex]
+    } catch (ArrayIndexOutOfBoundException e){
+      System.out.println(line + " - INVALID  Doesn't match format")
+        line = line.nextLine(); // skip the date that isn't MYD
+    }
+    */
+
 
       // converting month as number to its 3 letter string
       switch (months[i]){
@@ -182,7 +214,8 @@ class ManyDates {
           break;
       }
 
-      // checks whether the day is within the days in that particular month
+      /** checks if month exceeds 12 and whether the day is within the days in
+          that particular month */
       if (months[i] > 12) {
         isValidDate = false;
         errorString = " - INVALID: Month out of range";
@@ -193,7 +226,7 @@ class ManyDates {
 
       // adds 2000 to the year if between 0 and 49
       // adds 1900 to the year if between 50 and 99
-      // invalid date if out of range
+      // invalid date if out of range 1753 - 3000 (both inclusive)
       if (years[i] >= 0 && years[i] < 50) {
         years[i] += 2000;
       } else if (years[i] >= 50 && years[i] < 100) {
