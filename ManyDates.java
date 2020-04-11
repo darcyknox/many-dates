@@ -139,37 +139,6 @@ class ManyDates {
         daysInEachMonth[1] = 28;
       }
 
-    //  EXAMPLE
-
-    // if (mdy is predominant){
-    //   skip over dates that aren't mdy
-    // }
-
-
-    //  IMPLEMENTATION (would go something like this)
-
-    // For the given format of stdin, skip over dates that don't match this
-    /*
-    try {
-      if (monthColIndex == 0 && days[i] == col3[i]){ //i.e. if MYD
-        line day <= daysInEachMonth[line monthColIndex]; // if line is not MYD
-      } else if (monthColIndex == 0 && days[i] == col2[i]){ //i.e. if MDY
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 1 && days[i] == col3[i]){ //i.e. if YMD
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 1 && days[i] == col1[i]){ //i.e. if DMY
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 2 && days[i] == col2[i]){ //i.e. if YDM
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 2 && days[i] == col1[i]){ //i.e. if DYM
-        line day <= daysInEachMonth[line monthColIndex]
-    } catch (ArrayIndexOutOfBoundException e){
-      System.out.println(line + " - INVALID  Doesn't match format")
-        line = line.nextLine(); // skip the date that isn't MYD
-    }
-    */
-
-
       // converting month as number to its 3 letter string
       switch (months[i]){
         case 1:
