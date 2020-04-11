@@ -132,7 +132,7 @@ class ManyDates {
       isValidDate = true;
 
       // Leap year condition
-      if (years[i] % 4 == 0 && !(years[i] % 400 ==0)) {
+      if (years[i] % 4 == 0 && !(years[i] % 100 == 0 && years[i] % 400 != 0)) {
         daysInEachMonth[1] = 29;
         // System.out.println("Leap year " + Integer.toString(years[i]));
       } else if (daysInEachMonth[1] == 29){
@@ -142,26 +142,26 @@ class ManyDates {
     //  EXAMPLE
 
     // if (mdy is predominant){
-    //   skip over dates that aren't mdy 
+    //   skip over dates that aren't mdy
     // }
 
 
     //  IMPLEMENTATION (would go something like this)
 
-    // For the given format of stdin, skip over dates that don't match this 
+    // For the given format of stdin, skip over dates that don't match this
     /*
-    try{
-      if (monthColIndex == 0 && days[i] == col3[i]){ //i.e. if MYD 
+    try {
+      if (monthColIndex == 0 && days[i] == col3[i]){ //i.e. if MYD
         line day <= daysInEachMonth[line monthColIndex]; // if line is not MYD
-      } else if (monthColIndex == 0 && days[i] == col2[i]){ //i.e. if MDY 
+      } else if (monthColIndex == 0 && days[i] == col2[i]){ //i.e. if MDY
         line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 1 && days[i] == col3[i]){ //i.e. if YMD 
+      } else if (monthColIndex == 1 && days[i] == col3[i]){ //i.e. if YMD
         line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 1 && days[i] == col1[i]){ //i.e. if DMY 
+      } else if (monthColIndex == 1 && days[i] == col1[i]){ //i.e. if DMY
         line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 2 && days[i] == col2[i]){ //i.e. if YDM 
+      } else if (monthColIndex == 2 && days[i] == col2[i]){ //i.e. if YDM
         line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 2 && days[i] == col1[i]){ //i.e. if DYM 
+      } else if (monthColIndex == 2 && days[i] == col1[i]){ //i.e. if DYM
         line day <= daysInEachMonth[line monthColIndex]
     } catch (ArrayIndexOutOfBoundException e){
       System.out.println(line + " - INVALID  Doesn't match format")
@@ -170,7 +170,7 @@ class ManyDates {
     */
 
 
-      // converting month as number it's 3 letter string
+      // converting month as number to its 3 letter string
       switch (months[i]){
         case 1:
           monthStrings[i] = "Jan";
@@ -214,7 +214,10 @@ class ManyDates {
       }
 
       // checks whether the day is within the days in that particular month
-      if (days[i] > daysInEachMonth[months[i] - 1]) {
+      if (months[i] > 12) {
+        isValidDate = false;
+        errorString = " - INVALID: Month out of range";
+      } else if (days[i] > daysInEachMonth[months[i] - 1]) {
         isValidDate = false; // DAY OUT OF RANGE FOR GIVEN MONTH
         errorString = " - INVALID: Day out of range for given month.";
       }
