@@ -74,6 +74,8 @@ class ManyDates {
 
     }
 
+    stdin.close();
+
     numberOfLines = col1.size();
 
     final long start = System.nanoTime();
