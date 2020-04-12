@@ -15,8 +15,6 @@ class ManyDates {
         countValidMonths++;
       }
     }
-    System.out.print("Month score: ");
-    System.out.println(countValidMonths/col.size());
     return countValidMonths/col.size();
   }
 
@@ -28,8 +26,6 @@ class ManyDates {
         countValidDays++;
       }
     }
-    System.out.print("Day score: ");
-    System.out.println(countValidDays/col.size());
     return countValidDays/col.size();
   }
 
@@ -45,6 +41,7 @@ class ManyDates {
 
     String line = "";
     String[] split;
+    int numberOfLines;
 
     /** Splits each line of input by the / separator
     *** Adds each number to an array by positions
@@ -58,17 +55,26 @@ class ManyDates {
 
       split = line.split("/");
 
+      if (split.length != 3) { // such lines will not be processed
+        if (split.length == 1 && split[0].length() == 0) { // empty line -> process all input
+          break;
+        }
+        System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'");
+      } else {
 
+        n1 = Integer.parseInt(split[0]); // first number
+        n2 = Integer.parseInt(split[1]); // second number
+        n3 = Integer.parseInt(split[2]); // third number
 
-      n1 = Integer.parseInt(split[0]); // first number
-      n2 = Integer.parseInt(split[1]); // second number
-      n3 = Integer.parseInt(split[2]); // third number
+        col1.add(n1); // add the first number to the ArrayList of first numbers
+        col2.add(n2); // add the second number to the ArrayList of second numbers
+        col3.add(n3); // add the third number to the ArrayList of third numbers
 
-      col1.add(n1); // add the first number to the ArrayList of first numbers
-      col2.add(n2); // add the second number to the ArrayList of second numbers
-      col3.add(n3); // add the third number to the ArrayList of third numbers
+      }
 
     }
+
+    numberOfLines = col1.size();
 
     final long start = System.nanoTime();
 
@@ -87,9 +93,9 @@ class ManyDates {
       }
     }
 
-    Integer[] days = new Integer[col1.size()];
-    Integer[] months = new Integer[col1.size()];
-    Integer[] years = new Integer[col1.size()];
+    Integer[] days = new Integer[numberOfLines];
+    Integer[] months = new Integer[numberOfLines];
+    Integer[] years = new Integer[numberOfLines];
 
     /** From knowing the likeliest month column, assign the days column to be
       * the likeliest days column out of the two remaining */
@@ -125,10 +131,10 @@ class ManyDates {
     int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     // array to store our number months converted to strings
-    String[] monthStrings = new String[months.length];
+    String[] monthStrings = new String[numberOfLines];
 
     // Checks and Formatting
-    for (int i = 0; i < months.length; i++) {
+    for (int i = 0; i < numberOfLines; i++) {
 
       errorString = "";
       isValidDate = true;

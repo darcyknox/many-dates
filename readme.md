@@ -1,7 +1,18 @@
-Program currently reads input line by line and creates 3 ArrayLists that each hold all the numbers in a single 'column' - a position in the date format (column1/column2/column3). One column will be days, one will be months and one will be years.
+COSC326
+Etude-2 Many Dates
 
-validMonths:
-Returns a boolean for if the array (column) could possibly be the months column.
+Darcy Knox 7712753
+William Wallace
 
-validDays:
-Returns a boolean for if the array (column) could possibly be the days column.
+Written in java
+
+Compile program using command:
+javac ManyDates.java
+
+To input from a file, use the command:
+java ManyDates < filename.txt
+
+To input from the command line:
+1. Enter the command: java ManyDates
+2. Enter input dates
+3. Press the enter/return key on an empty line to compute
