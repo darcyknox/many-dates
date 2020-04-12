@@ -4,6 +4,13 @@ import java.lang.String;
 
 class ManyDates {
 
+  /** Uses monthScore value to assign the 'most fitting' month column.
+    * Then uses dayScore value to assign the 'most fitting' day column, and
+    * therefore year column.
+    * Once columns are set, the program checks for any invalidities, and formats
+    * dates for output.
+    */
+
   private static boolean isValidDate;
   private static String errorString;
 
@@ -59,7 +66,7 @@ class ManyDates {
         if (split.length == 1 && split[0].length() == 0) { // empty line -> process all input
           break;
         }
-        System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'");
+        System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
       } else {
 
         n1 = Integer.parseInt(split[0]); // first number
@@ -80,11 +87,17 @@ class ManyDates {
 
     final long start = System.nanoTime();
 
-    double col1MonthScore = monthScore(col1);
-    double col2MonthScore = monthScore(col2);
+    double col1MonthScore = monthScore(col1); // .8
+    double col2MonthScore = monthScore(col2); // .8
     double col3MonthScore = monthScore(col3);
 
-    double[] monthScores = {col1MonthScore, col2MonthScore, col3MonthScore};
+
+    /** column 2 first in monthScores array so the format stays the same as the
+      * input format if there are equal monthScore/dayScore values.
+      * i.e. default case is d/m/y
+      */
+
+    double[] monthScores = {col2MonthScore, col1MonthScore, col3MonthScore};
 
     int monthColIndex = 0;
     double maxScore = monthScores[monthColIndex];
@@ -101,6 +114,7 @@ class ManyDates {
 
     /** From knowing the likeliest month column, assign the days column to be
       * the likeliest days column out of the two remaining */
+    // Note:
     if (monthColIndex == 2) {
       months = col3.toArray(months);
       if (dayScore(col2) > dayScore(col1)) {
@@ -110,7 +124,7 @@ class ManyDates {
         days = col1.toArray(days);
         years = col2.toArray(years);
       }
-    } else if (monthColIndex == 1) {
+    } else if (monthColIndex == 0) {
       months = col2.toArray(months);
       if (dayScore(col3) > dayScore(col1)) {
         days = col3.toArray(days);
@@ -119,7 +133,7 @@ class ManyDates {
         days = col1.toArray(days);
         years = col3.toArray(years);
       }
-    } else if (monthColIndex == 0) {
+    } else if (monthColIndex == 1) {
       months = col1.toArray(months);
       if (dayScore(col3) > dayScore(col2)) {
         days = col3.toArray(days);
@@ -147,36 +161,6 @@ class ManyDates {
       } else if (daysInEachMonth[1] == 29){
         daysInEachMonth[1] = 28;
       }
-
-    //  EXAMPLE
-
-    // if (mdy is predominant){
-    //   skip over dates that aren't mdy
-    // }
-
-
-    //  IMPLEMENTATION (would go something like this)
-
-    // For the given format of stdin, skip over dates that don't match this
-    /*
-    try {
-      if (monthColIndex == 0 && days[i] == col3[i]){ //i.e. if MYD
-        line day <= daysInEachMonth[line monthColIndex]; // if line is not MYD
-      } else if (monthColIndex == 0 && days[i] == col2[i]){ //i.e. if MDY
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 1 && days[i] == col3[i]){ //i.e. if YMD
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 1 && days[i] == col1[i]){ //i.e. if DMY
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 2 && days[i] == col2[i]){ //i.e. if YDM
-        line day <= daysInEachMonth[line monthColIndex]
-      } else if (monthColIndex == 2 && days[i] == col1[i]){ //i.e. if DYM
-        line day <= daysInEachMonth[line monthColIndex]
-    } catch (ArrayIndexOutOfBoundException e){
-      System.out.println(line + " - INVALID  Doesn't match format")
-        line = line.nextLine(); // skip the date that isn't MYD
-    }
-    */
 
 
       // converting month as number to its 3 letter string
@@ -226,7 +210,10 @@ class ManyDates {
           that particular month */
       if (months[i] > 12) {
         isValidDate = false;
-        errorString = " - INVALID: Month out of range";
+        errorString = " - INVALID: Month out of range.";
+      } else if (days[i] > 31) {
+        isValidDate = false;
+        errorString = " - INVALID: Day out of range.";
       } else if (days[i] > daysInEachMonth[months[i] - 1]) {
         isValidDate = false; // DAY OUT OF RANGE FOR GIVEN MONTH
         errorString = " - INVALID: Day out of range for given month.";
