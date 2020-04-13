@@ -32,10 +32,11 @@ class ManyDates {
   // If the given month is valid, the day is only considered valid if it fits
   // within the daysInEachMonth for its month.
   // If the month is not valid, we assume the day is valid if it's less than 31.
-  private static double dayScore(List<Integer> days, Integer[] months) {
+  private static double dayScore(List<Integer> days, Integer[] months, List<Integer> years) {
     double countValidDays = 0;
     for (int i = 0; i < days.size(); i++) {
       if (months[i] <= 12) {
+        leapYear(years.get(i));
         if (days.get(i) <= daysInEachMonth[months[i] - 1]) {
           countValidDays++;
         }
@@ -44,6 +45,14 @@ class ManyDates {
       }
     }
     return countValidDays/days.size();
+  }
+
+  private static void leapYear(Integer year) {
+    if (year % 4 == 0 && !(year % 100 == 0 && year % 400 != 0)) {
+      daysInEachMonth[1] = 29;
+    } else if (daysInEachMonth[1] == 29){
+      daysInEachMonth[1] = 28;
+    }
   }
 
 
@@ -127,7 +136,7 @@ class ManyDates {
     // Note:
     if (monthColIndex == 2) {
       months = col3.toArray(months);
-      if (dayScore(col2, months) > dayScore(col1, months)) {
+      if (dayScore(col2, months, col1) > dayScore(col1, months, col2)) {
         days = col2.toArray(days);
         years = col1.toArray(years);
       } else {
@@ -136,7 +145,7 @@ class ManyDates {
       }
     } else if (monthColIndex == 0) {
       months = col2.toArray(months);
-      if (dayScore(col3, months) > dayScore(col1, months)) {
+      if (dayScore(col3, months, col1) > dayScore(col1, months, col3)) {
         days = col3.toArray(days);
         years = col1.toArray(years);
       } else {
@@ -145,7 +154,7 @@ class ManyDates {
       }
     } else if (monthColIndex == 1) {
       months = col1.toArray(months);
-      if (dayScore(col3, months) > dayScore(col2, months)) {
+      if (dayScore(col3, months, col2) > dayScore(col2, months, col3)) {
         days = col3.toArray(days);
         years = col2.toArray(years);
       } else {
@@ -153,9 +162,6 @@ class ManyDates {
         years = col3.toArray(years);
       }
     }
-
-    // maybe make this global so it can be accessed by dayScore function
-    //int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     // array to store our number months converted to strings
     String[] monthStrings = new String[numberOfLines];
@@ -166,13 +172,7 @@ class ManyDates {
       errorString = "";
       isValidDate = true;
 
-      // Check if leap year. If not, make sure Feb days are 28
-      if (years[i] % 4 == 0 && !(years[i] % 100 == 0 && years[i] % 400 != 0)) {
-        daysInEachMonth[1] = 29;
-      } else if (daysInEachMonth[1] == 29){
-        daysInEachMonth[1] = 28;
-      }
-
+      leapYear(years[i]); // changes days in Feb if it needs to
 
       // converting month as number to its 3 letter string
       switch (months[i]){
