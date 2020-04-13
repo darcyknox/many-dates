@@ -2,7 +2,7 @@ COSC326
 Etude-2 Many Dates
 
 Darcy Knox 7712753
-William Wallace
+William Wallace 1216661
 
 Written in java
 
