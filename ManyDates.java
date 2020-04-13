@@ -11,8 +11,11 @@ class ManyDates {
     * dates for output.
     */
 
+  // When accessing the daysInEachMonth array, the index is the given month - 1
+
   private static boolean isValidDate;
   private static String errorString;
+  private static int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
   // returns the percentage of valid months in a column
   private static double monthScore(List<Integer> col) {
@@ -25,15 +28,22 @@ class ManyDates {
     return countValidMonths/col.size();
   }
 
-  // returns the percentage of valid days in a column
-  private static double dayScore(List<Integer> col) {
+  // Returns the percentage of valid days in a column.
+  // If the given month is valid, the day is only considered valid if it fits
+  // within the daysInEachMonth for its month.
+  // If the month is not valid, we assume the day is valid if it's less than 31.
+  private static double dayScore(List<Integer> days, Integer[] months) {
     double countValidDays = 0;
-    for (int i = 0; i < col.size(); i++) {
-      if (col.get(i) <= 31) {
+    for (int i = 0; i < days.size(); i++) {
+      if (months[i] <= 12) {
+        if (days.get(i) <= daysInEachMonth[months[i] - 1]) {
+          countValidDays++;
+        }
+      } else if (days.get(i) <= 31) {
         countValidDays++;
       }
     }
-    return countValidDays/col.size();
+    return countValidDays/days.size();
   }
 
 
@@ -117,7 +127,7 @@ class ManyDates {
     // Note:
     if (monthColIndex == 2) {
       months = col3.toArray(months);
-      if (dayScore(col2) > dayScore(col1)) {
+      if (dayScore(col2, months) > dayScore(col1, months)) {
         days = col2.toArray(days);
         years = col1.toArray(years);
       } else {
@@ -126,7 +136,7 @@ class ManyDates {
       }
     } else if (monthColIndex == 0) {
       months = col2.toArray(months);
-      if (dayScore(col3) > dayScore(col1)) {
+      if (dayScore(col3, months) > dayScore(col1, months)) {
         days = col3.toArray(days);
         years = col1.toArray(years);
       } else {
@@ -135,7 +145,7 @@ class ManyDates {
       }
     } else if (monthColIndex == 1) {
       months = col1.toArray(months);
-      if (dayScore(col3) > dayScore(col2)) {
+      if (dayScore(col3, months) > dayScore(col2, months)) {
         days = col3.toArray(days);
         years = col2.toArray(years);
       } else {
@@ -144,7 +154,8 @@ class ManyDates {
       }
     }
 
-    int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    // maybe make this global so it can be accessed by dayScore function
+    //int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
     // array to store our number months converted to strings
     String[] monthStrings = new String[numberOfLines];
