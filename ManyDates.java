@@ -5,10 +5,10 @@ import java.lang.String;
 class ManyDates {
 
   /** Uses monthScore value to assign the 'most fitting' month column.
-    * Then uses dayScore value to assign the 'most fitting' day column, and
-    * therefore year column.
-    * Once columns are set, the program checks for any invalidities, and formats
-    * dates for output.
+    * Then uses dayScore value to assign the 'most fitting' day column (using
+    * the given day column), and sets the remaining column as years.
+    * Once columns are set, the program checks for invalidities, then formats
+    * valid dates for output.
     */
 
   // When accessing the daysInEachMonth array, the index is the given month - 1
@@ -17,7 +17,7 @@ class ManyDates {
   private static String errorString;
   private static int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-  // returns the percentage of valid months in a column
+  // returns a value representing percentage of valid months in a column.
   private static double monthScore(List<Integer> col) {
     double countValidMonths = 0;
     for (int i = 0; i < col.size(); i++) {
@@ -28,10 +28,11 @@ class ManyDates {
     return countValidMonths/col.size();
   }
 
-  // Returns the percentage of valid days in a column.
-  // If the given month is valid, the day is only considered valid if it fits
-  // within the daysInEachMonth for its month.
-  // If the month is not valid, we assume the day is valid if it's less than 31.
+  /** Returns a value representing percentage of valid days in a column.
+    * If the given month is valid, the day is only considered valid if it fits
+    * within the daysInEachMonth for its month.
+    * If the month isn't valid, we assume the day is valid if it's less than 31.
+    * dayScore accounts for leap years by calling the leapYear mutator. */
   private static double dayScore(List<Integer> days, Integer[] months, List<Integer> years) {
     double countValidDays = 0;
     for (int i = 0; i < days.size(); i++) {
@@ -47,6 +48,8 @@ class ManyDates {
     return countValidDays/days.size();
   }
 
+  /** Mutator function that changes days in February if the year is a leap year,
+    * or corrects it if it's not. */
   private static void leapYear(Integer year) {
     if (year % 4 == 0 && !(year % 100 == 0 && year % 400 != 0)) {
       daysInEachMonth[1] = 29;
@@ -79,11 +82,11 @@ class ManyDates {
 
       line = stdin.nextLine();
 
-      split = line.split("/");
+      split = line.split("/"); // separate the numbers in the date
 
       if (split.length != 3) { // such lines will not be processed
-        if (split.length == 1 && split[0].length() == 0) { // empty line -> process all input
-          break;
+        if (split.length == 1 && split[0].length() == 0) { // process all input
+          break; // all input entered -> exit the loop and process
         }
         System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
       } else {
@@ -111,8 +114,8 @@ class ManyDates {
     double col3MonthScore = monthScore(col3);
 
 
-    /** column 2 first in monthScores array so the format stays the same as the
-      * input format if there are equal monthScore/dayScore values.
+    /** column 2 comes first in monthScores array so the format stays the same
+      * as the input format if there are equal monthScore/dayScore values.
       * i.e. default case is d/m/y
       */
 
@@ -163,18 +166,16 @@ class ManyDates {
       }
     }
 
-    // array to store our number months converted to strings
+    // Array to store the string form of each month
     String[] monthStrings = new String[numberOfLines];
 
-    // Checks and Formatting
+    // Checks and formatting
     for (int i = 0; i < numberOfLines; i++) {
 
       errorString = "";
       isValidDate = true;
 
-      leapYear(years[i]); // changes days in Feb if it needs to
-
-      // converting month as number to its 3 letter string
+      // Converting month as number to its 3 letter string
       switch (months[i]){
         case 1:
           monthStrings[i] = "Jan";
@@ -217,7 +218,9 @@ class ManyDates {
           break;
       }
 
-      /** checks if month exceeds 12 and whether the day is within the days in
+      leapYear(years[i]); // changes days in Feb if it needs to
+
+      /** checks if month exceeds 12, and whether the day is within the days in
           that particular month */
       if (months[i] > 12) {
         isValidDate = false;
@@ -226,7 +229,7 @@ class ManyDates {
         isValidDate = false;
         errorString = " - INVALID: Day out of range.";
       } else if (days[i] > daysInEachMonth[months[i] - 1]) {
-        isValidDate = false; // DAY OUT OF RANGE FOR GIVEN MONTH
+        isValidDate = false;
         errorString = " - INVALID: Day out of range for given month.";
       }
 
@@ -238,10 +241,11 @@ class ManyDates {
       } else if (years[i] >= 50 && years[i] < 100) {
         years[i] += 1900;
       } else if ((years[i] >= 100 && years[i] < 1753) | years[i] > 3000) {
-        isValidDate = false; // YEAR OUT OF RANGE
+        isValidDate = false;
         errorString = " - INVALID: Year out of range.";
       }
 
+      // Output
       String dayString;
       if (!isValidDate) {
         System.out.println(Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
