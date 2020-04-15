@@ -2,6 +2,10 @@ import java.util.*;
 import java.lang.Math;
 import java.lang.String;
 
+// Etude-2 Many Dates
+// Authors: Darcy Knox & William Wallace
+// Date: April 2020
+
 class ManyDates {
 
   /** Uses monthScore value to assign the 'most fitting' month column.
@@ -109,10 +113,9 @@ class ManyDates {
 
     final long start = System.nanoTime();
 
-    double col1MonthScore = monthScore(col1); // .8
-    double col2MonthScore = monthScore(col2); // .8
+    double col1MonthScore = monthScore(col1);
+    double col2MonthScore = monthScore(col2);
     double col3MonthScore = monthScore(col3);
-
 
     /** column 2 comes first in monthScores array so the format stays the same
       * as the input format if there are equal monthScore/dayScore values.
@@ -121,6 +124,7 @@ class ManyDates {
 
     double[] monthScores = {col2MonthScore, col1MonthScore, col3MonthScore};
 
+    // Gets the most likely month column based off monthScore values.
     int monthColIndex = 0;
     double maxScore = monthScores[monthColIndex];
     for (int i = 1; i < 3; i++) {
@@ -130,13 +134,13 @@ class ManyDates {
       }
     }
 
+    // Arrays that get the values of the columns once we know which is which.
     Integer[] days = new Integer[numberOfLines];
     Integer[] months = new Integer[numberOfLines];
     Integer[] years = new Integer[numberOfLines];
 
     /** From knowing the likeliest month column, assign the days column to be
       * the likeliest days column out of the two remaining */
-    // Note:
     if (monthColIndex == 2) {
       months = col3.toArray(months);
       if (dayScore(col2, months, col1) > dayScore(col1, months, col2)) {
