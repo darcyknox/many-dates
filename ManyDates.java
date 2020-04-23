@@ -1,6 +1,7 @@
 import java.util.*;
 import java.lang.Math;
 import java.lang.String;
+import java.util.regex.*;
 
 // Etude-2 Many Dates
 // Authors: Darcy Knox & William Wallace
@@ -8,12 +9,11 @@ import java.lang.String;
 
 class ManyDates {
 
-  /** Uses monthScore value to assign the 'most fitting' month column.
-    * Then uses dayScore value to assign the 'most fitting' day column (using
-    * the given day column), and sets the remaining column as years.
-    * Once columns are set, the program checks for invalidities, then formats
-    * valid dates for output.
-    */
+  /* Uses monthScore value to assign the 'most fitting' month column.
+  * Then uses dayScore value to assign the 'most fitting' day column (using
+  * the given day column), and sets the remaining column as years.
+  * Once columns are set, the program checks for invalidities, then formats
+  * valid dates for output. */
 
   // When accessing the daysInEachMonth array, the index is the given month - 1
 
@@ -21,7 +21,7 @@ class ManyDates {
   private static String errorString;
   private static int[] daysInEachMonth = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
 
-  // returns a value representing percentage of valid months in a column.
+  // Returns a value representing percentage of valid months in a column.
   private static double monthScore(List<Integer> col) {
     double countValidMonths = 0;
     for (int i = 0; i < col.size(); i++) {
@@ -32,11 +32,11 @@ class ManyDates {
     return countValidMonths/col.size();
   }
 
-  /** Returns a value representing percentage of valid days in a column.
-    * If the given month is valid, the day is only considered valid if it fits
-    * within the daysInEachMonth for its month.
-    * If the month isn't valid, we assume the day is valid if it's less than 31.
-    * dayScore accounts for leap years by calling the leapYear mutator. */
+  /* Returns a value representing percentage of valid days in a column.
+  * If the given month is valid, the day is only considered valid if it fits
+  * within the daysInEachMonth for its month.
+  * If the month isn't valid, we assume the day is valid if it's less than 31.
+  * dayScore accounts for leap years by calling the leapYear mutator. */
   private static double dayScore(List<Integer> days, Integer[] months, List<Integer> years) {
     double countValidDays = 0;
     for (int i = 0; i < days.size(); i++) {
@@ -52,8 +52,8 @@ class ManyDates {
     return countValidDays/days.size();
   }
 
-  /** Mutator function that changes days in February if the year is a leap year,
-    * or corrects it if it's not. */
+  /* Mutator function that changes days in February if the year is a leap year,
+  * or corrects it if it's not. */
   private static void leapYear(Integer year) {
     if (year % 4 == 0 && !(year % 100 == 0 && year % 400 != 0)) {
       daysInEachMonth[1] = 29;
@@ -76,35 +76,45 @@ class ManyDates {
     String[] split;
     int numberOfLines;
 
-    /** Splits each line of input by the / separator
-    *** Adds each number to an array by positions
-    *** - all days are in the same ArrayList
-    *** - all months are in the same ArrayList
-    *** - all years are in the same ArrayList
-    */
+    /* Splits each line of input by the / separator
+    * Adds each number to an array by positions
+    * - all days are in the same ArrayList
+    * - all months are in the same ArrayList
+    * - all years are in the same ArrayList */
     while (stdin.hasNextLine()) {
 
       line = stdin.nextLine();
 
-      split = line.split("/"); // separate the numbers in the date
+      // Match the line of input against a regex
+      boolean match = Pattern.compile("^[0-9]+/[0-9]+/[0-9]+$").matcher(line).matches();
 
-      if (split.length != 3) { // such lines will not be processed
-        if (split.length == 1 && split[0].length() == 0) { // process all input
-          break; // all input entered -> exit the loop and process
-        }
+      /* If the pattern doesn't match, an error is printed and the input doesn't
+      * get processed. */
+      if (!match) {
         System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
       } else {
 
-        n1 = Integer.parseInt(split[0]); // first number
-        n2 = Integer.parseInt(split[1]); // second number
-        n3 = Integer.parseInt(split[2]); // third number
+        split = line.split("/"); // separate the numbers in the date
 
-        col1.add(n1); // add the first number to the ArrayList of first numbers
-        col2.add(n2); // add the second number to the ArrayList of second numbers
-        col3.add(n3); // add the third number to the ArrayList of third numbers
+        if (split.length != 3) { // such lines will not be processed
+          if (split.length == 1 && split[0].length() == 0) { // process all input
+            break; // all input entered -> exit the loop and process
+          } else {
 
+          }
+          System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+        } else {
+
+          n1 = Integer.parseInt(split[0]); // first number
+          n2 = Integer.parseInt(split[1]); // second number
+          n3 = Integer.parseInt(split[2]); // third number
+
+          col1.add(n1); // add the first number to the ArrayList of first numbers
+          col2.add(n2); // add the second number to the ArrayList of second numbers
+          col3.add(n3); // add the third number to the ArrayList of third numbers
+
+        }
       }
-
     }
 
     stdin.close();
@@ -117,10 +127,9 @@ class ManyDates {
     double col2MonthScore = monthScore(col2);
     double col3MonthScore = monthScore(col3);
 
-    /** column 2 comes first in monthScores array so the format stays the same
-      * as the input format if there are equal monthScore/dayScore values.
-      * i.e. default case is d/m/y
-      */
+    /* Column 2 comes first in monthScores array so the format stays the same
+    * as the input format if there are equal monthScore/dayScore values.
+    * i.e. default case is d/m/y. */
 
     double[] monthScores = {col2MonthScore, col1MonthScore, col3MonthScore};
 
@@ -139,8 +148,8 @@ class ManyDates {
     Integer[] months = new Integer[numberOfLines];
     Integer[] years = new Integer[numberOfLines];
 
-    /** From knowing the likeliest month column, assign the days column to be
-      * the likeliest days column out of the two remaining */
+    /* From knowing the likeliest month column, assign the days column to be
+    * the likeliest days column out of the two remaining. */
     if (monthColIndex == 2) {
       months = col3.toArray(months);
       if (dayScore(col2, months, col1) > dayScore(col1, months, col2)) {
@@ -224,8 +233,8 @@ class ManyDates {
 
       leapYear(years[i]); // changes days in Feb if it needs to
 
-      /** checks if month exceeds 12, and whether the day is within the days in
-          that particular month */
+      /* Checks if month exceeds 12, and whether the day is within the days in
+      * that particular month. */
       if (months[i] > 12) {
         isValidDate = false;
         errorString = " - INVALID: Month out of range.";
