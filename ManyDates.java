@@ -103,11 +103,14 @@ class ManyDates {
 
           }
           System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+        } else if (split[0].length() > 4 || split[1].length() > 4 || split[2].length() > 4) {
+          System.out.println(line + " - INVALID: Input numbers should not be more than 4 digits long.");
         } else {
 
           n1 = Integer.parseInt(split[0]); // first number
           n2 = Integer.parseInt(split[1]); // second number
           n3 = Integer.parseInt(split[2]); // third number
+
 
           col1.add(n1); // add the first number to the ArrayList of first numbers
           col2.add(n2); // add the second number to the ArrayList of second numbers
