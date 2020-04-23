@@ -103,8 +103,10 @@ class ManyDates {
 
           }
           System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
-        } else if (split[0].length() > 4 || split[1].length() > 4 || split[2].length() > 4) {
-          System.out.println(line + " - INVALID: Input numbers should not be more than 4 digits long.");
+        } else if (split[0].length() > 4 || split[0].length() == 3 
+        || split[1].length() > 4 || split[1].length() == 3 
+        || split[2].length() > 4 || split[2].length() == 3 ) {
+          System.out.println(line + " - INVALID: Input numbers should not be more than 4 digits long, or 3 digits in length.");
         } else {
 
           n1 = Integer.parseInt(split[0]); // first number
@@ -238,10 +240,10 @@ class ManyDates {
 
       /* Checks if month exceeds 12, and whether the day is within the days in
       * that particular month. */
-      if (months[i] > 12) {
+      if (months[i] > 12 || months[i] < 1) {
         isValidDate = false;
         errorString = " - INVALID: Month out of range.";
-      } else if (days[i] > 31) {
+      } else if (days[i] > 31 || days[i] < 1) {
         isValidDate = false;
         errorString = " - INVALID: Day out of range.";
       } else if (days[i] > daysInEachMonth[months[i] - 1]) {
@@ -252,15 +254,16 @@ class ManyDates {
         // adds 2000 to the year if between 0 and 49
         // adds 1900 to the year if between 50 and 99
         // invalid date if out of range 1753 - 3000 (both inclusive)
-        if (years[i] >= 0 && years[i] < 50) {
-          years[i] += 2000;
-        } else if (years[i] >= 50 && years[i] < 100) {
-          years[i] += 1900;
-        } else if ((years[i] >= 100 && years[i] < 1753) | years[i] > 3000) {
-          isValidDate = false;
-          errorString = " - INVALID: Year out of range.";
-        }
 
+        int[] invalidYears = {0,1,2,3,4,5,6,7,8,9};
+        if ((years[i] >= 100 && years[i] < 1753 | years[i] > 3000 || Arrays.asList(invalidYears).contains(years[i]))) {
+            isValidDate = false;
+            errorString = " - INVALID: Year out of range or has 1 digit as input.";
+        } else if (years[i] >= 0 && years[i] < 50 ) {
+            years[i] += 2000;
+        } else if (years[i] >= 50 && years[i] < 100) {
+            years[i] += 1900;
+        }
       }
 
 
