@@ -25,7 +25,7 @@ class ManyDates {
   private static double monthScore(List<Integer> col) {
     double countValidMonths = 0;
     for (int i = 0; i < col.size(); i++) {
-      if (col.get(i) <= 12) {
+      if (col.get(i) <= 12 && col.get(i) > 0) {
         countValidMonths++;
       }
     }
@@ -40,13 +40,15 @@ class ManyDates {
   private static double dayScore(List<Integer> days, Integer[] months, List<Integer> years) {
     double countValidDays = 0;
     for (int i = 0; i < days.size(); i++) {
-      if (months[i] <= 12) {
-        leapYear(years.get(i));
-        if (days.get(i) <= daysInEachMonth[months[i] - 1]) {
+      if (months[i] > 0) {
+        if (months[i] <= 12) {
+          leapYear(years.get(i));
+          if (days.get(i) <= daysInEachMonth[months[i] - 1]) {
+            countValidDays++;
+          }
+        } else if (days.get(i) <= 31) {
           countValidDays++;
         }
-      } else if (days.get(i) <= 31) {
-        countValidDays++;
       }
     }
     return countValidDays/days.size();
@@ -88,25 +90,26 @@ class ManyDates {
       // Match the line of input against a regex
       boolean match = Pattern.compile("^[0-9]+/[0-9]+/[0-9]+$").matcher(line).matches();
 
+      split = line.split("/"); // separate the numbers in the date
+
       /* If the pattern doesn't match, an error is printed and the input doesn't
       * get processed. */
-      if (!match) {
-        System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+      if (!match && split.length != 3) {
+        if (split.length == 1 && split[0].length() == 0) { // process all input
+          break; // all input entered -> exit the loop and process
+        } else {
+          System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+        }
       } else {
 
-        split = line.split("/"); // separate the numbers in the date
-
-        if (split.length != 3) { // such lines will not be processed
-          if (split.length == 1 && split[0].length() == 0) { // process all input
-            break; // all input entered -> exit the loop and process
-          } else {
-
-          }
-          System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
-        } else if (split[0].length() > 4 || split[0].length() == 3 
-        || split[1].length() > 4 || split[1].length() == 3 
-        || split[2].length() > 4 || split[2].length() == 3 ) {
+        if ((split[0].length() > 4 || split[0].length() == 3)
+          || (split[1].length() > 4 || split[1].length() == 3)
+          || (split[2].length() > 4 || split[2].length() == 3)) {
           System.out.println(line + " - INVALID: Input numbers should not be more than 4 digits long, or 3 digits in length.");
+        } else if (line.length() > 10) {
+          System.out.println(line + " - INVALID: Excessive input length.");
+        } else if (line.length() < 6) {
+          System.out.println(line + " - INVALID: Year must be a 2 or 4 digit number.");
         } else {
 
           n1 = Integer.parseInt(split[0]); // first number
@@ -232,37 +235,40 @@ class ManyDates {
           monthStrings[i] = "Dec";
           break;
         default:
+          isValidDate = false;
           errorString = " - INVALID: Month out of range.";
           break;
       }
 
-      leapYear(years[i]); // changes days in Feb if it needs to
+      if (isValidDate) {
+        leapYear(years[i]); // changes days in Feb if it needs to
 
-      /* Checks if month exceeds 12, and whether the day is within the days in
-      * that particular month. */
-      if (months[i] > 12 || months[i] < 1) {
-        isValidDate = false;
-        errorString = " - INVALID: Month out of range.";
-      } else if (days[i] > 31 || days[i] < 1) {
-        isValidDate = false;
-        errorString = " - INVALID: Day out of range.";
-      } else if (days[i] > daysInEachMonth[months[i] - 1]) {
-        isValidDate = false;
-        errorString = " - INVALID: Day out of range for given month.";
-      } else {
+        /* Checks if month exceeds 12, and whether the day is within the days in
+        * that particular month. */
+        if (months[i] > 12 || months[i] < 1) {
+          isValidDate = false;
+          errorString = " - INVALID: Month out of range.";
+        } else if (days[i] > 31 || days[i] < 1) {
+          isValidDate = false;
+          errorString = " - INVALID: Day out of range.";
+        } else if (days[i] > daysInEachMonth[months[i] - 1]) {
+          isValidDate = false;
+          errorString = " - INVALID: Day out of range for given month.";
+        } else {
 
-        // adds 2000 to the year if between 0 and 49
-        // adds 1900 to the year if between 50 and 99
-        // invalid date if out of range 1753 - 3000 (both inclusive)
+          // adds 2000 to the year if between 0 and 49
+          // adds 1900 to the year if between 50 and 99
+          // invalid date if out of range 1753 - 3000 (both inclusive)
 
-        int[] invalidYears = {0,1,2,3,4,5,6,7,8,9};
-        if ((years[i] >= 100 && years[i] < 1753 | years[i] > 3000 || Arrays.asList(invalidYears).contains(years[i]))) {
-            isValidDate = false;
-            errorString = " - INVALID: Year out of range or has 1 digit as input.";
-        } else if (years[i] >= 0 && years[i] < 50 ) {
-            years[i] += 2000;
-        } else if (years[i] >= 50 && years[i] < 100) {
-            years[i] += 1900;
+          int[] invalidYears = {0,1,2,3,4,5,6,7,8,9};
+          if ((years[i] >= 100 && years[i] < 1753 | years[i] > 3000 || Arrays.asList(invalidYears).contains(years[i]))) {
+              isValidDate = false;
+              errorString = " - INVALID: Year out of range or has 1 digit as input.";
+          } else if (years[i] >= 0 && years[i] < 50 ) {
+              years[i] += 2000;
+          } else if (years[i] >= 50 && years[i] < 100) {
+              years[i] += 1900;
+          }
         }
       }
 
