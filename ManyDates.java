@@ -111,7 +111,7 @@ class ManyDates {
         if ((split[0].length() > 4 || split[0].length() == 3)
           || (split[1].length() > 4 || split[1].length() == 3)
           || (split[2].length() > 4 || split[2].length() == 3)) {
-          output.add(line + " - INVALID: Input numbers must have either 1, 2, or 4 digits.");
+          output.add(line + " - INVALID: Input numbers must be either 1, 2, or 4 digits long.");
         } else if (line.length() > 10) {
           output.add(line + " - INVALID: Excessive input length.");
         } else if (line.length() < 6) {
