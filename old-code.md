@@ -74,8 +74,6 @@ class ManyDates {
     ArrayList<Integer> col2 = new ArrayList<Integer>();
     ArrayList<Integer> col3 = new ArrayList<Integer>();
 
-    ArrayList<String> output = new ArrayList<String>();
-
     String line = "";
     String[] split;
     int numberOfLines;
@@ -96,22 +94,22 @@ class ManyDates {
 
       /* If the pattern doesn't match, an error is printed and the input doesn't
       * get processed. */
-      if (!match || split.length != 3) {
+      if (!match && split.length != 3) {
         if (split.length == 1 && split[0].length() == 0) { // process all input
           break; // all input entered -> exit the loop and process
         } else {
-          output.add(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+          System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/'.");
         }
       } else {
 
         if ((split[0].length() > 4 || split[0].length() == 3)
           || (split[1].length() > 4 || split[1].length() == 3)
           || (split[2].length() > 4 || split[2].length() == 3)) {
-          output.add(line + " - INVALID: Input numbers should not be more than 4 digits long, or 3 digits in length.");
+          System.out.println(line + " - INVALID: Input numbers should not be more than 4 digits long, or 3 digits in length.");
         } else if (line.length() > 10) {
-          output.add(line + " - INVALID: Excessive input length.");
+          System.out.println(line + " - INVALID: Excessive input length.");
         } else if (line.length() < 6) {
-          output.add(line + " - INVALID: Year must be a 2 or 4 digit number.");
+          System.out.println(line + " - INVALID: Year must be a 2 or 4 digit number.");
         } else {
 
           n1 = Integer.parseInt(split[0]); // first number
@@ -123,8 +121,6 @@ class ManyDates {
           col2.add(n2); // add the second number to the ArrayList of second numbers
           col3.add(n3); // add the third number to the ArrayList of third numbers
 
-          output.add("");
-
         }
       }
     }
@@ -132,6 +128,8 @@ class ManyDates {
     stdin.close();
 
     numberOfLines = col1.size();
+
+    final long start = System.nanoTime();
 
     double col1MonthScore = monthScore(col1);
     double col2MonthScore = monthScore(col2);
@@ -272,26 +270,25 @@ class ManyDates {
         }
       }
 
-      int nextFreeIndex = output.indexOf("");
+
 
       // Output
       String dayString;
       if (!isValidDate) {
-        output.set(nextFreeIndex, Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
+        System.out.println(Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
       } else {
         if (days[i] < 10) {
           dayString = "0" + Integer.toString(days[i]);
         } else {
           dayString = Integer.toString(days[i]);
         }
-        output.set(nextFreeIndex, dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
+        System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
       }
 
     }
 
-    for (int i = 0; i < output.size(); i++) {
-      System.out.println(output.get(i));
-    }
+    final long end = System.nanoTime();
 
+    System.out.println((end - start)/ Math.pow(10, 9));
   }
 }
