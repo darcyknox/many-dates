@@ -74,6 +74,10 @@ class ManyDates {
     ArrayList<Integer> col2 = new ArrayList<Integer>();
     ArrayList<Integer> col3 = new ArrayList<Integer>();
 
+    ArrayList<String> col1Strings = new ArrayList<String>();
+    ArrayList<String> col2Strings = new ArrayList<String>();
+    ArrayList<String> col3Strings = new ArrayList<String>();
+
     ArrayList<String> output = new ArrayList<String>();
 
     String line = "";
@@ -107,12 +111,17 @@ class ManyDates {
         if ((split[0].length() > 4 || split[0].length() == 3)
           || (split[1].length() > 4 || split[1].length() == 3)
           || (split[2].length() > 4 || split[2].length() == 3)) {
-          output.add(line + " - INVALID: Input numbers should not be more than 4 digits long, or 3 digits in length.");
+          output.add(line + " - INVALID: Input numbers must have either 1, 2, or 4 digits.");
         } else if (line.length() > 10) {
           output.add(line + " - INVALID: Excessive input length.");
         } else if (line.length() < 6) {
           output.add(line + " - INVALID: Year must be a 2 or 4 digit number.");
         } else {
+
+          col1Strings.add(split[0]);
+          col2Strings.add(split[1]);
+          col3Strings.add(split[2]);
+
 
           n1 = Integer.parseInt(split[0]); // first number
           n2 = Integer.parseInt(split[1]); // second number
@@ -158,6 +167,8 @@ class ManyDates {
     Integer[] months = new Integer[numberOfLines];
     Integer[] years = new Integer[numberOfLines];
 
+    String[] yearStrings = new String[numberOfLines];
+
     /* From knowing the likeliest month column, assign the days column to be
     * the likeliest days column out of the two remaining. */
     if (monthColIndex == 2) {
@@ -165,27 +176,33 @@ class ManyDates {
       if (dayScore(col2, months, col1) > dayScore(col1, months, col2)) {
         days = col2.toArray(days);
         years = col1.toArray(years);
+        yearStrings = col1Strings.toArray(yearStrings);
       } else {
         days = col1.toArray(days);
         years = col2.toArray(years);
+        yearStrings = col2Strings.toArray(yearStrings);
       }
     } else if (monthColIndex == 0) {
       months = col2.toArray(months);
       if (dayScore(col3, months, col1) > dayScore(col1, months, col3)) {
         days = col3.toArray(days);
         years = col1.toArray(years);
+        yearStrings = col1Strings.toArray(yearStrings);
       } else {
         days = col1.toArray(days);
         years = col3.toArray(years);
+        yearStrings = col3Strings.toArray(yearStrings);
       }
     } else if (monthColIndex == 1) {
       months = col1.toArray(months);
       if (dayScore(col3, months, col2) > dayScore(col2, months, col3)) {
         days = col3.toArray(days);
         years = col2.toArray(years);
+        yearStrings = col2Strings.toArray(yearStrings);
       } else {
         days = col2.toArray(days);
         years = col3.toArray(years);
+        yearStrings = col3Strings.toArray(yearStrings);
       }
     }
 
@@ -258,6 +275,12 @@ class ManyDates {
           errorString = " - INVALID: Day out of range for given month.";
         } else {
 
+          if (yearStrings[i].length() != 2 && yearStrings[i].length() != 4) {
+            isValidDate = false;
+            errorString = " - INVALID: Years must be 2 or 4 digits long.";
+          }
+
+
           // adds 2000 to the year if between 0 and 49
           // adds 1900 to the year if between 50 and 99
           // invalid date if out of range 1753 - 3000 (both inclusive)
@@ -277,7 +300,7 @@ class ManyDates {
       // Output
       String dayString;
       if (!isValidDate) {
-        output.set(nextFreeIndex, Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + Integer.toString(years[i]) + errorString);
+        output.set(nextFreeIndex, Integer.toString(days[i]) + "/" + Integer.toString(months[i]) + "/" + yearStrings[i] + errorString);
       } else {
         if (days[i] < 10) {
           dayString = "0" + Integer.toString(days[i]);
