@@ -94,7 +94,7 @@ class ManyDates {
 
       /* If the pattern doesn't match, an error is printed and the input doesn't
       * get processed. */
-      if (!match && split.length != 3) {
+      if (!match || split.length != 3) {
         if (split.length == 1 && split[0].length() == 0) { // process all input
           break; // all input entered -> exit the loop and process
         } else {
@@ -120,16 +120,11 @@ class ManyDates {
           col1.add(n1); // add the first number to the ArrayList of first numbers
           col2.add(n2); // add the second number to the ArrayList of second numbers
           col3.add(n3); // add the third number to the ArrayList of third numbers
+          
 
-        }
-      }
-    }
-
-    stdin.close();
+          //stdin.close();
 
     numberOfLines = col1.size();
-
-    final long start = System.nanoTime();
 
     double col1MonthScore = monthScore(col1);
     double col2MonthScore = monthScore(col2);
@@ -284,11 +279,9 @@ class ManyDates {
         }
         System.out.println(dayString + " " + monthStrings[i] + " " + Integer.toString(years[i]));
       }
-
+        }
+      }
     }
-
-    final long end = System.nanoTime();
-
-    System.out.println((end - start)/ Math.pow(10, 9));
+    }
   }
 }
