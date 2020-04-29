@@ -15,4 +15,4 @@ java ManyDates < filename.txt
 To input from the command line:
 1. Enter the command: java ManyDates
 2. Enter input dates
-3. Press the enter/return key on an empty line to compute
+3. Press ctrl+d to compute

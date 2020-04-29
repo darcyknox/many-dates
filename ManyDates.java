@@ -101,14 +101,10 @@ class ManyDates {
       /* If the pattern doesn't match, an error is printed and the input doesn't
       * get processed. */
       if (!match || split.length != 3) {
-        if (split.length == 1 && split[0].length() == 0) { // process all input
-          break; // all input entered -> exit the loop and process
+        if (line.compareTo(line.trim()) != 0) {
+          output.add(line + " - INVALID: Input contains leading and/or trailing whitespace.");
         } else {
-          if (line.compareTo(line.trim()) != 0) {
-            output.add(line + " - INVALID: Input contains leading and/or trailing whitespace.");
-          } else {
-            output.add(line + " - INVALID: Input must be 3 numbers separated by '/'.");
-          }
+          output.add(line + " - INVALID: Input must be 3 numbers separated by '/'.");
         }
       } else {
 
