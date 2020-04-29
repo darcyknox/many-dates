@@ -114,8 +114,6 @@ class ManyDates {
           output.add(line + " - INVALID: Input numbers must be either 1, 2, or 4 digits long.");
         } else if (line.length() > 10) {
           output.add(line + " - INVALID: Excessive input length.");
-        } else if (line.length() < 6) {
-          output.add(line + " - INVALID: Year must be a 2 or 4 digit number.");
         } else {
 
           col1Strings.add(split[0]);
