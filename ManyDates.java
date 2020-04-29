@@ -7,7 +7,7 @@ import java.util.regex.*;
 // Authors: Darcy Knox & William Wallace
 // Date: April 2020
 
-class ManyDatesRegex {
+class ManyDates {
 
   /* Uses monthScore value to assign the 'most fitting' month column.
   * Then uses dayScore value to assign the 'most fitting' day column (using
@@ -95,7 +95,6 @@ class ManyDatesRegex {
 
       // Match the line of input against a regex
       boolean match = Pattern.compile("^[0-9]+/[0-9]+/[0-9]+$").matcher(line).matches();
-      boolean matchWhitespace = Pattern.compile("^\\s{1,}[0-9]+/[0-9]+/[0-9]+\\s{1,}$").matcher(line).matches();
 
       split = line.split("/"); // separate the numbers in the date
 
@@ -104,10 +103,12 @@ class ManyDatesRegex {
       if (!match || split.length != 3) {
         if (split.length == 1 && split[0].length() == 0) { // process all input
           break; // all input entered -> exit the loop and process
-        } else if (matchWhitespace){
-            System.out.println(line + " - INVALID: Input must be 3 numbers separated by '/' (no leading or trailing whitespace)");
         } else {
-          output.add(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+          if (line.compareTo(line.trim()) != 0) {
+            output.add(line + " - INVALID: Input contains leading and/or trailing whitespace.");
+          } else {
+            output.add(line + " - INVALID: Input must be 3 numbers separated by '/'.");
+          }
         }
       } else {
 
