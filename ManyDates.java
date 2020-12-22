@@ -94,7 +94,7 @@ class ManyDates {
       line = stdin.nextLine();
 
       // Match the line of input against a regex
-      boolean match = Pattern.compile("^[0-9]+/[0-9]+/[0-9]+$").matcher(line).matches();
+      boolean match = Pattern.compile("^[0-9]+\s/[0-9]+/[0-9]+$").matcher(line).matches();
 
       split = line.split("/"); // separate the numbers in the date
 
